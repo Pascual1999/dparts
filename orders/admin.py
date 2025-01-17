@@ -49,6 +49,6 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.index_template = 'admin/customIndex.html'
 admin.site.site_url = settings.SITE_URL
 
-# Unregister the DjangoJob and DjangoJobExecution models
+# Cancelar registro de los modelos DjangoJob and DjangoJobExecution
 admin.site.unregister(DjangoJob)
 admin.site.unregister(DjangoJobExecution)
