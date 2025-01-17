@@ -1,0 +1,185 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load i18n static %}
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <script src="
+    https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js
+    "></script>    <title>Repuestos Toretto | Reporte de Operaciones</title>
+
+    <style>
+        .has-equal-height {
+            display: flex;
+            flex-direction: column;
+        }
+        .max-height {
+            max-height: 100%;
+        }
+        .max-width {
+            max-width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="section mx-4">
+        <div class="columns">
+          <div class="column is-4">
+            <figure class="image">
+                <img src="{% static 'assets/gtoretto-logo.png' %}" />
+            </figure>
+          </div>
+
+          <div class="column is-8 has-text-left is-align-content-center	">
+            
+            <h1 class="title">Reporte de Operaciones</h1>
+            {% if filterBy == 'all' %}
+            <h2 class="subtitle">Todos los tiempos</h2>
+            {% elif filterBy == 'this-month' %}
+            <h2 class="subtitle">{{ currentMonth }} - {{ currentYear }}</h2>
+            {% elif filterBy == 'this-year' %}
+            <h2 class="subtitle">{{ currentYear }}</h2>
+            
+            {% endif %}
+            
+          </div>
+        </div>
+        <hr>
+        <div class="columns"> 
+            <div class="column is-3 ">
+                <div class="box has-text-centered">
+                    <p class="is-size-5">Ordenes en proceso</p>
+                    <p class="is-size-1">{{ total_pending_orders }}</p>
+                </div>
+            </div>
+    
+            <div class="column is-3">
+                <div class="box has-text-centered">
+                    <p class="is-size-5">Ordenes Canceladas</p>
+                    <p class="is-size-1">{{ total_cancelled_orders }}</p>
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="box has-text-centered">
+                    <p class="is-size-5">Ordenes Pagadas</p>
+                    <p class="is-size-1">{{ total_paid_orders }}</p>
+
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="box has-text-centered">
+                    <p class="is-size-5">Ordenes Completadas</p>
+                    <p class="is-size-1">{{ total_completed_orders }}</p>
+
+                </div>
+            </div>
+      </div>
+      <div class="columns">
+
+        <div class="column is-6 is-flex is-flex-direction-column">
+            <div class="box has-text-centered">
+                <p class="is-size-5">Ordenes Completadas</p>
+                <div style="height: 40vh;">
+                    <canvas id="ordersThroughYear"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="column is-6">
+            <div class="box has-text-centered ">
+                <p class="is-size-5">Top 10: Productos Vendidos</p>
+                <div style="height: 40vh;">
+                    <canvas id="top10products" ></canvas>
+  
+                </div>
+            </div>
+        </div>
+
+      </div>
+
+    </div>
+      
+      
+    <script>
+        const filterBy = "{{ filterBy }}";
+
+        const ctx = document.getElementById('top10products');
+      
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            datasets: [{
+              data: {{ top10_products|safe }},
+              borderWidth: 1
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                },
+                x: {
+                    ticks: {
+                        callback: function(value, index, ticks_array) {
+                            let characterLimit = 12;
+                            let label = this.getLabelForValue(value);
+                            if ( label.length >= characterLimit) {
+                                return label.slice(0, label.length).substring(0, characterLimit -1).trim() + '...';
+                            }
+                            return label;
+                        }
+                    }
+            }
+        }
+          }
+        });
+
+        const MONTHS = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        const data = {{ orders_through_year|safe }};
+
+        let labels = [];
+
+        if (data.length < 12 && filterBy === 'this-year') {
+            labels = MONTHS
+        }
+
+        const ctx2 = document.getElementById('ordersThroughYear');
+        const orderLineChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: {{ labels|safe }},
+                datasets: [{
+
+                    data: data,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                maintainAspectRatio: false
+            }
+        });
+        
+
+      </script>
+</body>
+
+</html>

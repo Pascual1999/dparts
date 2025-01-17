@@ -1,0 +1,68 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+
+<link rel="stylesheet" type="text/css" href="{% static "/css/bootstrap-grid.min.css" %}"/>
+
+
+<style>
+
+    select{
+        height: 2.25rem;
+        border-radius: 5px 0 0 5px;
+        margin-top:10px;
+        margin-bottom:10px;
+        margin-left:10px;
+    }
+    .button{
+        height: 2.25rem;
+        border-radius: 0 5px 5px 0;
+    }
+    .report-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 2.25rem;
+    }
+
+      
+      
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="container">
+    
+    <div class="row">
+
+        <div class="col mb-4">
+            <div class="report-container">
+                <div>
+                    <select id="filterBy" class="report">
+                        <option value="this-month">Este mes</option>
+                        <option selected value="this-year">Este año</option>
+                        <option value="all">Todos los tiempos</option>
+                    </select>
+                </div>
+
+                <button class="button"
+                onClick="
+                    window.location.href='/admin/report/?filterBy='+document.getElementById('filterBy').value
+                "> Generar Reporte
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    {{block.super}}
+
+{% endblock %}

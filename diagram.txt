@@ -1,0 +1,82 @@
+python -m django_diagram --settings=app.settings --output=diagram1.txt
+---
+Django ER Diagram
+---
+erDiagram
+LogEntry {
+    AutoField id
+    DateTimeField action_time
+    ForeignKey user
+    ForeignKey content_type
+    TextField object_id
+    CharField object_repr
+    PositiveSmallIntegerField action_flag
+    TextField change_message
+}
+Permission {
+    AutoField id
+    CharField name
+    ForeignKey content_type
+    CharField codename
+}
+Group {
+    AutoField id
+    CharField name
+    ManyToManyField permissions
+}
+User {
+    AutoField id
+    CharField password
+    DateTimeField last_login
+    BooleanField is_superuser
+    CharField username
+    CharField first_name
+    CharField last_name
+    CharField email
+    BooleanField is_staff
+    BooleanField is_active
+    DateTimeField date_joined
+    ManyToManyField groups
+    ManyToManyField user_permissions
+}
+ContentType {
+    AutoField id
+    CharField app_label
+    CharField model
+}
+Session {
+    CharField session_key
+    TextField session_data
+    DateTimeField expire_date
+}
+AuthToken {
+    CharField digest
+    CharField token_key
+    ForeignKey user
+    DateTimeField created
+    DateTimeField expiry
+}
+Category {
+    BigAutoField id
+    CharField name
+    SlugField slug
+}
+Product {
+    BigAutoField id
+    ForeignKey category
+    CharField name
+    SlugField slug
+    TextField description
+    DecimalField price
+    FileField image
+    FileField thumbnail
+    DateTimeField date_added
+}
+LogEntry }|--|| User : user
+LogEntry }|--|| ContentType : content_type
+Permission }|--|| ContentType : content_type
+Group }|--|{ Permission : permissions
+User }|--|{ Group : groups
+User }|--|{ Permission : user_permissions
+AuthToken }|--|| User : user
+Product }|--|| Category : category
