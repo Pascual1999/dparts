@@ -21,7 +21,7 @@ class CategoryTest(TestCase):
             sku="test1234",
             slug="producttest",
             description="product description",
-            price=25.00
+            price=25.00,
             tags=[self.test_tag]
         )
         self.test_product2 = Product.objects.create(

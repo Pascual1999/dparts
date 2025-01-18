@@ -81,7 +81,7 @@ class UsersTests(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.client.put(
+        response = self.client.patch(
             self.manage_url,
             {
                 'name': 'pascual',
@@ -238,7 +238,7 @@ class UserAuthTests(BaseTestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        response = self.client.put(
+        response = self.client.post(
             self.change_password_url,
             {
                 'password1': 'testpassword',

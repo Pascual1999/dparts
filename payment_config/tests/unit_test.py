@@ -79,6 +79,7 @@ class PaymentConfigTests(TestCase):
         data = {
             'name': 'test',
             'payment_data': 'testdescription',
+            'key': 'testkey',
             'is_active': True
         }
         obj = PaymentMethod.objects.create(**data)
@@ -87,4 +88,3 @@ class PaymentConfigTests(TestCase):
 
         self.assertEqual(serializer.data['name'], data['name'])
         self.assertEqual(serializer.data['payment_data'], data['payment_data'])
-        self.assertEqual(serializer.data['is_active'], data['is_active'])

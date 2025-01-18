@@ -12,8 +12,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 import dj_database_url
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,9 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app", ".now.sh"]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
@@ -109,7 +112,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres:Crmn123%24@localhost:5432/postgres',
+        default=os.environ.get('DATABASE_URL'),
         conn_max_age=600
     )
 }
