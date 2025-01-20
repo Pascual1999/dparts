@@ -1,10 +1,12 @@
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.contrib.auth import get_user_model
 
 from product.models import Product
 from payment_config.models import PaymentMethod
 
 User = get_user_model()
+
+F = models.F
 
 
 def upload_to(instance, filename):
@@ -123,9 +125,21 @@ class Order(models.Model):
         verbose_name_plural = 'ordenes'
 
     def save(self, *args, **kwargs):
-        if self.status == self.PAID and self.proof_of_payment == None:
+        if ((self.status == self.PAID or self.status == self.COMPLETED)
+            and (self.proof_of_payment == None)):
             raise Exception('La orden debe tener una captura de pago.')
         else:
+            if self.status == self.COMPLETED:
+                order_items = OrderItem.objects.filter(order=self)
+                try:
+                    with transaction.atomic():
+                        for item in order_items:
+                            product = Product.objects.get(id=item.product.id)
+                            product.stock_on_hold = F('stock_on_hold') - item.quantity
+                            product.units_sold = F('units_sold') + item.quantity
+                            product.save()
+                except IntegrityError:
+                    raise Exception('Error al actualizar el stock en reserva.')
             super().save(*args, **kwargs)
 
 
@@ -138,7 +152,7 @@ class OrderItem(models.Model):
         )
     order = models.ForeignKey(
         Order,
-        verbose_name="Orden",                    
+        verbose_name="Orden",
         on_delete=models.CASCADE,
         related_name='items'
         )

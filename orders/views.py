@@ -1,4 +1,10 @@
-from rest_framework import permissions
+from django.db import IntegrityError, transaction
+from django.db.models import F
+from django.forms import ValidationError
+
+from rest_framework import permissions, status
+from rest_framework.response import Response
+
 from rest_framework.generics import (CreateAPIView, ListAPIView,
                                      UpdateAPIView, RetrieveAPIView)
 
@@ -7,6 +13,8 @@ from payment_config.models import (DollarExchangeHistory,
 
 from .models import Order
 from .serializers import OrderSerializer, MyOrderSerializer
+
+from product.models import Product
 
 from knox.auth import TokenAuthentication
 
@@ -29,8 +37,18 @@ class CreateOrder(CreateAPIView):
     def perform_create(self, serializer):
         # Calcular el monto desde el servidor.
         IVA = float(PaymentConfig.objects.get(key='IVA').value) / 100
-        exchange_rate = DollarExchangeHistory.objects.all().order_by('-date').first().value
+        exchange_rate = DollarExchangeHistory.objects.all().order_by(
+            '-date'
+            ).first().value
 
+        with transaction.atomic():
+            for item in serializer.validated_data['items']:
+                product = Product.objects.get(id=item.get('product').id)
+                quantity = item.get('quantity')
+                assert product.stock >= quantity
+                product.stock = F('stock') - quantity
+                product.stock_on_hold = F('stock_on_hold') + quantity
+                product.save()
         amount = sum(item.get('quantity') *
                      item.get('product').price
                      for item in serializer.validated_data['items'])
@@ -42,6 +60,15 @@ class CreateOrder(CreateAPIView):
                         IVA=IVA,
                         exchange_rate=exchange_rate,
                         status=Order.IN_PROGRESS)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            response = super().create(request, *args, **kwargs)
+        except AssertionError:
+            response = Response(
+                {'detail': 'No hay inventario suficiente para satisfacer la orden.'},
+                status=status.HTTP_400_BAD_REQUEST)
+        return response
 
 
 class UpdateOrder(UpdateAPIView):

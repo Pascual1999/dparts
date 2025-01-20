@@ -5,6 +5,8 @@ from django.core.files import File
 from django.db import models
 from django.utils.text import slugify
 
+from utils.utils import make_square
+
 
 class Category(models.Model):
     """Modelo de categoría de productos."""
@@ -64,10 +66,28 @@ class Product(models.Model):
         null=True
         )
     price = models.DecimalField(
-        'Precio',
+        'Precio (USD)',
         max_digits=6,
         decimal_places=2
         )
+    stock = models.PositiveIntegerField(
+        'En stock',
+        default=0,
+        blank=False,
+        null=False
+    )
+    stock_on_hold = models.PositiveIntegerField(
+        'En espera',
+        default=0,
+        blank=False,
+        null=False
+    )
+    units_sold = models.PositiveIntegerField(
+        'Unidades vendidas',
+        default=0,
+        blank=False,
+        null=False
+    )
     image = models.ImageField(
         'Imagen',
         upload_to='uploads/',
@@ -119,9 +139,10 @@ class Product(models.Model):
             else:
                 return ''
 
-    def make_thumbnail(self, image, size=(600, 400)):
+    def make_thumbnail(self, image, size=(300, 200)):
         img = Image.open(image)
-        img.convert('RGB')
+        img = img.convert('RGB')
+        img = make_square(img)
         img.thumbnail(size)
 
         thumb_io = BytesIO()

@@ -1,6 +1,9 @@
 import logging
+from datetime import timedelta
 
+from django.db import transaction
 from django.conf import settings
+from django.utils import timezone
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -10,10 +13,20 @@ from django_apscheduler.models import DjangoJobExecution
 from django_apscheduler import util
 
 from payment_config.api_calls import get_bcv
+from orders.models import Order
+from orders.utils import cancel_old_in_progress_orders
+
 
 logger = logging.getLogger(__name__)
 
 
+@util.close_old_connections
+def cancel_old_in_progress_orders_job():
+
+    cancel_old_in_progress_orders()
+
+
+@util.close_old_connections
 def get_bcv_job():
     data = get_bcv()
     if data['status_code'] == 200:
@@ -46,8 +59,16 @@ class Command(BaseCommand):
 
         scheduler.add_job(
             get_bcv_job,
-            trigger=CronTrigger(minute="*/5"),
-            id="get_bcv_job",  # The `id` assigned to each job MUST be unique
+            trigger=CronTrigger(day="*"),
+            id="get_bcv_job",
+            max_instances=1,
+            replace_existing=True,
+        )
+        logger.info("Added job 'my_job'.")
+        scheduler.add_job(
+            cancel_old_in_progress_orders_job,
+            trigger=CronTrigger(day="*"),
+            id="cancel_old_in_progress_orders",
             max_instances=1,
             replace_existing=True,
         )

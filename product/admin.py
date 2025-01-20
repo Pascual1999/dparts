@@ -22,18 +22,19 @@ class ProductResource(resources.ModelResource):
     class Meta:
         model = Product
         fields = ('id', 'name', 'category', 'sku', 'brand', 'description',
-                  'price')
+                  'stock', 'price')
         excluded = ('date_added', 'tags')
 
 
 class ProductAdmin(ImportExportModelAdmin):
     resource_class = ProductResource
-    list_display = ['id', 'name', 'date_added', 'price', 'is_active']
+    list_display = ['id', 'name', 'category', 'stock', 'stock_on_hold',
+                    'units_sold', 'date_added', 'price', 'is_active']
     inlines = [ProductTagInline]
     search_fields = ['name', 'description']
     list_filter = ['is_active', 'category', 'tags']
     list_per_page = 20
-    readonly_fields = ['thumbnail', 'slug']
+    readonly_fields = ['thumbnail', 'slug', 'stock_on_hold', 'units_sold']
 
 
 class TagAdmin(admin.ModelAdmin):

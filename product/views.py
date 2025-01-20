@@ -21,7 +21,9 @@ class LatestProductsList(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def get(self, request, format=None):
-        products = Product.objects.filter(is_active=True)[0:4]
+        products = Product.objects.filter(
+            is_active=True
+            )[0:4]
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 

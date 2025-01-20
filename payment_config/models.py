@@ -33,12 +33,6 @@ class PaymentMethod(models.Model):
             null=False,
             blank=False
             )
-    key = models.CharField(
-            max_length=10,
-            verbose_name='Nombre en clave',
-            unique=True,
-            blank=False,
-            null=False)
     payment_data = models.TextField(
         verbose_name='Datos',
         blank=False,

@@ -27,11 +27,12 @@ class ProductSerializer(serializers.ModelSerializer):
             'brand',
             'description',
             'price',
+            'stock',
             'get_image',
             'get_thumbnail',
             'tags'
         )
-    
+
 
 class CategorySerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True)
@@ -47,7 +48,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     def get_products(self, obj):
         return ProductSerializer(
-            obj.products.filter(is_active=True).order_by('id'), 
+            obj.products.filter(is_active=True).order_by('id'),
             many=True).data
 
 
