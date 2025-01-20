@@ -124,8 +124,7 @@ DATABASES = {
 
 }
 
-DATABASES['default'] = DATABASES['sqlite3' if USE_SQLITE else 'postgresql']
-
+DATABASES['default'] = DATABASES['sqlite3' if USE_SQLITE == 'true' else 'postgresql']
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
