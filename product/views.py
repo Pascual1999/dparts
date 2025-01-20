@@ -42,12 +42,15 @@ class RelatedProductsList(generics.ListAPIView):
 
     def get(self, request, format=None):
         product_id = request.query_params.get('product_id', None)
-        tags = Product.objects.get(id=product_id).tags.all()
-        products = Product.objects.filter(
-            is_active=True,
-            tags__in=tags).exclude(id=product_id)[0:4]
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
+        try:
+            tags = Product.objects.get(id=product_id).tags.all()
+            products = Product.objects.filter(
+                is_active=True,
+                tags__in=tags).exclude(id=product_id)[0:4]
+            serializer = ProductSerializer(products, many=True)
+            return Response(serializer.data)
+        except Product.DoesNotExist:
+            raise Http404
 
 
 class ProductDetail(APIView):
@@ -63,10 +66,10 @@ class ProductDetail(APIView):
 
     def get_object(self, category_slug, product_slug):
         try:
-            return Product.objects.filter(category__slug=category_slug, 
+            return Product.objects.filter(category__slug=category_slug,
                                           is_active=True).get(
                                           slug=product_slug)
-        except Product.DoesNotExist:
+        except Product.DoesNotExist or Category.DoesNotExist:
             raise Http404
 
     def get(self, request, category_slug, product_slug, format=None):
@@ -89,10 +92,11 @@ class CategoryDetail(APIView):
         try:
             return Category.objects.get(
                 slug=category_slug)
-        except Product.DoesNotExist:
+        except Category.DoesNotExist:
             raise Http404
 
     def get(self, request, category_slug, format=None):
+
         category = self.get_object(category_slug)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
