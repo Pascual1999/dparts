@@ -113,7 +113,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 USE_SQLITE = os.environ.get('USE_SQLITE')
 
 DATABASES = {
-    'postgesql': dj_database_url.config(
+    'postgresql': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
         conn_max_age=600
     ),
