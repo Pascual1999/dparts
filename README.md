@@ -58,3 +58,24 @@ Pruebas funcionales:
   pipenv shell
   python manage.py test --tag=functional_tests -v 2
 ```
+
+## Comandos extra
+
+Inicializar coordinador de tareas
+
+```bash
+  python manage.py runapscheduler
+```
+
+Actualizar tasa del dolar manualmente
+
+```bash
+  python manage.py get_bcv
+```
+
+Generar .txt con diagrama ER
+
+```bash
+  python -m django_diagram --settings=app.settings --output=diagram1.txt
+```
+
