@@ -110,13 +110,28 @@ AUTH_USER_MODEL = 'users.CustomUser'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-USE_SQLITE = os.environ.get('USE_SQLITE')
+USE_SQLITE = os.environ.get('USE_SQLITE') == 'True'
+USE_DATABASE_URL = os.environ.get('USE_DATABASE_URL') == 'True'
 
-DATABASES = {
-    'postgresql': dj_database_url.config(
+
+if USE_DATABASE_URL:
+
+    postgresql = dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
         conn_max_age=600
-    ),
+    )
+else:
+    postgresql = {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': os.environ.get('POSTGRES_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT'),
+    }
+
+DATABASES = {
+    'postgresql': postgresql,
     'sqlite3': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
@@ -124,7 +139,9 @@ DATABASES = {
 
 }
 
-DATABASES['default'] = DATABASES['sqlite3' if USE_SQLITE == 'true' else 'postgresql']
+
+DATABASES['default'] = DATABASES['sqlite3' if USE_SQLITE else 'postgresql']
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
