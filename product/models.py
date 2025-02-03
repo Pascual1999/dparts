@@ -10,8 +10,16 @@ from utils.utils import make_square
 
 class Category(models.Model):
     """Modelo de categoría de productos."""
-    name = models.CharField('Nombre', max_length=255)
-    slug = models.SlugField('URL', unique=True)
+    name = models.CharField(
+        'Nombre',
+        max_length=255
+        )
+    slug = models.SlugField(
+        'URL',
+        unique=True,
+        null=True,
+        blank=False
+        )
 
     class Meta:
         ordering = ('name',)
@@ -50,7 +58,7 @@ class Product(models.Model):
         'SKU',
         unique=True,
         blank=False,
-        null=True,
+        null=True, 
         default=None,
         max_length=50
         )
