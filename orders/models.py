@@ -130,7 +130,7 @@ class Order(models.Model):
             raise Exception('La orden debe tener una captura de pago.')
         else:
             if self.status == self.COMPLETED:
-                order_items = OrderItem.objects.filter(order=self)
+                order_items = OrderItem.objects.filter(order__id=self.id)
                 try:
                     with transaction.atomic():
                         for item in order_items:
