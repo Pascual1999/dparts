@@ -34,7 +34,7 @@ class ProductAdmin(ImportExportModelAdmin):
     search_fields = ['name', 'description']
     list_filter = ['is_active', 'category', 'tags']
     list_per_page = 20
-    readonly_fields = ['thumbnail', 'slug', 'stock_on_hold', 'units_sold']
+    readonly_fields = ['thumbnail', 'slug', 'units_sold']
 
 
 class TagAdmin(admin.ModelAdmin):
