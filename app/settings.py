@@ -31,7 +31,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG')
 
-ALLOWED_HOSTS = ["127.0.0.1", ".onrender.com", ".now.sh", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", ".onrender.com", ".now.sh",
+    "localhost", "dparts-production.up.railway.app"]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
