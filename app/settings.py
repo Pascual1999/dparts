@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ["127.0.0.1", ".onrender.com", ".now.sh",
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
+    'http://localhost:3000',
     'https://dparts-vue.vercel.app',
 ]
 CSRF_TRUSTED_ORIGINS = [
