@@ -39,6 +39,7 @@ urllib3 = "==2.3.0"
 uvicorn = "==0.34.0"
 whitenoise = "==6.8.2"
 python-dotenv = "*"
+django-storages = {extras = ["s3"], version = "*"}
 
 [dev-packages]
 

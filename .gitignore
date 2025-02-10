@@ -35,7 +35,10 @@ coverage.xml
 
 
 # Environments 
-.env 
+.env
+.env.prod
+.env.dev
+.env.prod.db
 .venv 
 env/ 
 venv/ 

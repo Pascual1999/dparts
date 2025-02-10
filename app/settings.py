@@ -39,7 +39,8 @@ CORS_ALLOWED_ORIGINS = [
     'https://dparts-vue.vercel.app',
 ]
 CSRF_TRUSTED_ORIGINS = [
-    'https://dparts-production.up.railway.app'
+    'https://dparts-production.up.railway.app',
+    'http://localhost:1337'
 ]
 # Application definition
 
@@ -185,7 +186,7 @@ SITE_URL = 'http://localhost:5173'
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
