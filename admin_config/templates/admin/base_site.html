@@ -1,0 +1,175 @@
+{% extends "admin/base.html" %}
+
+{% load i18n static %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+<style>
+    #header{
+        background-color: rgb(46, 51, 61);
+    }
+
+    html[data-theme="light"],
+:root {
+    --primary: rgb(46, 51, 61);
+    --secondary: rgb(46, 51, 61);
+    --accent: rgb(72, 199, 142);
+    --primary-fg: #fff;
+
+    --body-fg: #333;
+    --body-bg: #fff;
+    --body-quiet-color: #666;
+    --body-medium-color: #444;
+    --body-loud-color: #000;
+
+    --header-color: #ffc;
+    --header-branding-color: var(--accent);
+    --header-bg: var(--secondary);
+    --header-link-color: var(--primary-fg);
+
+    --breadcrumbs-fg: #fff;
+    --breadcrumbs-link-fg: rgb(36, 44, 105);
+    --breadcrumbs-bg: rgb(72, 199, 142);
+
+    --link-fg: rgb(36, 44, 105);
+    --link-hover-color: #036;
+    --link-selected-fg: var(--secondary);
+
+    --hairline-color: #e8e8e8;
+    --border-color: #ccc;
+
+    --error-fg: #ba2121;
+
+    --message-success-bg: #dfd;
+    --message-warning-bg: #ffc;
+    --message-error-bg: #ffefef;
+
+    --darkened-bg: #f8f8f8; /* A bit darker than --body-bg */
+    --selected-bg: #e4e4e4; /* E.g. selected table cells */
+    --selected-row: #ffc;
+
+    --button-fg: #fff;
+    --button-bg: var(--secondary);
+    --button-hover-bg: rgb(72, 199, 142);
+    --default-button-bg: rgb(72, 199, 142);
+    --default-button-hover-bg: rgb(72, 199, 142);
+    --close-button-bg: #747474;
+    --close-button-hover-bg: #333;
+    --delete-button-bg: #ba2121;
+    --delete-button-hover-bg: #a41515;
+
+    --object-tools-fg: var(--button-fg);
+    --object-tools-bg: var(--close-button-bg);
+    --object-tools-hover-bg: var(--close-button-hover-bg);
+
+    --icon-invert: 0;
+
+    --font-family-primary: "Inter", SF Pro, Segoe UI, Roboto, Oxygen, Ubuntu, Helvetica Neue, Helvetica, Arial, sans-serif;
+    --font-family-monospace: "Inconsolata", Hack, SF Mono, Roboto Mono, Source Code Pro, Ubuntu Mono, monospace;
+
+    color-scheme: light;
+}
+
+html[data-theme="dark"],
+:root {
+    --icon-invert: 1;
+}
+
+.header-logo {
+    font-weight: bold;
+    font-color: #fff;
+}
+
+#site-name a:link, #site-name a:visited {
+    color: #fff;
+}   
+
+.icon{
+    height: 1.5rem;
+    filter: invert(var(--icon-invert));
+}
+
+
+.icon-name{
+    display: flex;
+    align-items: center;
+}
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+td, th{
+vertical-align: middle;
+}
+
+.module caption{
+    border-radius: 5px;
+}
+
+#content-related{
+    border-radius: 5px;
+}
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+{{ block.super }}
+{% endblock %}
+
+{% block header %}
+
+<header id="header" class="header">
+    <div id="branding">
+        {% block branding %}
+        <div id="site-name">
+            <a class="header-logo" href="{% url 'admin:index' %}">
+                {{ site_header|default:_('Django administration') }}
+            </a>
+        </div>
+        {% if user.is_anonymous %}
+            {% include "admin/color_theme_toggle.html" %}
+        {% endif %}
+        {% endblock %}
+    </div>
+    {% block usertools %}
+      {% if has_permission %}
+      <div id="user-tools">
+          {% block welcome-msg %}
+              {% translate 'Welcome,' %}
+              <strong>{% firstof user.get_short_name user.get_username %}</strong>.
+          {% endblock %}
+          {% block userlinks %}
+              {% if site_url %}
+                  <a href="{{ site_url }}">{% translate 'View site' %}</a> /
+              {% endif %}
+              {% if user.is_active and user.is_staff %}
+                  {% url 'django-admindocs-docroot' as docsroot %}
+                  {% if docsroot %}
+                      <a href="{{ docsroot }}">{% translate 'Documentation' %}</a> /
+                  {% endif %}
+              {% endif %}
+              {% if user.has_usable_password %}
+              <a href="{% url 'admin:password_change' %}">{% translate 'Change password' %}</a> /
+              {% endif %}
+              <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+                  {% csrf_token %}
+                  <button type="submit">{% translate 'Log out' %}</button>
+              </form>
+              {% include "admin/color_theme_toggle.html" %}
+          {% endblock %}
+      </div>
+      {% endif %}
+    {% endblock %}
+    {% block nav-global %}{% endblock %}
+  </header>
+
+{% endblock %}
+
+
+
+

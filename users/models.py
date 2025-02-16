@@ -17,7 +17,7 @@ class CustomUser(AbstractUser):
     last_name = None
     name = models.CharField(
         'Nombre',
-        max_length=125
+        max_length=75
         )
     email = models.EmailField(
         'Correo',
@@ -52,6 +52,10 @@ class CustomUser(AbstractUser):
         blank=True,
         null=True
         )
+    is_staff = models.BooleanField(
+        verbose_name="Es empleado",
+        default=False
+    )
 
     objects = CustomUserManager()
     USERNAME_FIELD = 'email'

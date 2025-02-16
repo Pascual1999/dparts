@@ -1,7 +1,5 @@
 from django.contrib import admin
-from django.conf import settings
 from .models import Order, OrderItem
-from django_apscheduler.models import DjangoJob, DjangoJobExecution
 
 
 class OrderItemInline(admin.TabularInline):
@@ -46,9 +44,4 @@ class OrderAdmin(admin.ModelAdmin):
     list_per_page = 20
 
 
-admin.site.index_template = 'admin/customIndex.html'
-admin.site.site_url = settings.SITE_URL
 
-# Cancelar registro de los modelos DjangoJob and DjangoJobExecution
-admin.site.unregister(DjangoJob)
-admin.site.unregister(DjangoJobExecution)

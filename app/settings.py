@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'orders',
     'report',
     'payment_config',
+    'admin_config',
     'corsheaders',
     'import_export'
 ]
@@ -83,7 +84,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'report' 
+            BASE_DIR / 'report',
+            BASE_DIR / 'admin_config/templates/',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -180,7 +182,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-SITE_URL = 'http://localhost:5173'
+SITE_URL = 'http://localhost:3000'
 
 
 # Static files (CSS, JavaScript, Images)

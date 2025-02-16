@@ -1,0 +1,73 @@
+{% load i18n static %}
+
+{% if app_list %}
+  {% for app in app_list %}
+    <div class="app-{{ app.app_label }} module{% if app.app_url in request.path|urlencode %} current-app{% endif %}">
+      <table>
+        <caption>
+          <a href="{{ app.app_url }}" class="section" title="{% blocktranslate with name=app.name %}Models in the {{ name }} application{% endblocktranslate %}">{{ app.name }}</a>
+        </caption>
+        {% for model in app.models %}
+          <tr class="model-{{ model.object_name|lower }}{% if model.admin_url in request.path|urlencode %} current-model{% endif %}">
+             
+           
+            {% if model.admin_url %}
+                <th scope="row">
+                <div class="icon-name">
+                    {% if model.name == 'Productos' %}
+                    <img class="icon" src="{% static "svg/warehouse.svg" %}" alt="{{ model.name }}" />
+                    {% elif model.name == 'Ordenes' %}
+                    <img class="icon" src="{% static "svg/cart-plus.svg" %}" alt="{{ model.name }}" />
+                    {% elif model.name == 'Usuarios' %}
+                    <img class="icon" src="{% static "svg/user.svg" %}" alt="{{ model.name }}" />
+                    {% elif model.name == 'Grupos' %}
+                    <img class="icon" src="{% static "svg/users.svg" %}" alt="{{ model.name }}" />
+                    {% elif model.name == 'Configuraciones de pago' %} 
+                    <img class="icon" src="{% static "svg/cog.svg" %}" alt="{{ model.name }}" />
+                    {% elif model.name == 'Métodos de pago' %}
+                    <img class="icon" src="{% static "svg/wallet.svg" %}" alt="{{ model.name }}" />
+                    {% elif model.name == 'Categorias' %}
+                    <img class="icon" src="{% static "svg/tag.svg" %}" alt="{{ model.name }}" />
+                    {% elif model.name == 'Etiquetas' %}
+                    <img class="icon" src="{% static "svg/tags.svg" %}" alt="{{ model.name }}" />
+                    {% elif model.name == 'Tasa del dolar/historial' %}
+                    <img class="icon" src="{% static "svg/dollar.svg" %}" alt="{{ model.name }}" />
+                    {% endif %}
+                    <a href="{{ model.admin_url }}"{% if model.admin_url in request.path|urlencode %} aria-current="page"{% endif %}>
+                        {{ model.name }}
+                    </a>
+                </div>
+                </th>
+            {% else %}
+              <th scope="row">{{ model.name }}</th>
+            {% endif %}
+            {% if model.add_url %}
+              <td>
+                <div class="center">
+
+                <a href="{{ model.add_url }}" class="addlink">{% translate 'Add' %}</a>
+                </div>
+
+            </td>
+            {% else %}
+              <td></td>
+            {% endif %}
+
+            {% if model.admin_url and show_changelinks %}
+              {% if model.view_only %}
+                <td><a href="{{ model.admin_url }}" class="viewlink">{% translate 'View' %}</a></td>
+              {% else %}
+                <td><a href="{{ model.admin_url }}" class="changelink">{% translate 'Change' %}</a></td>
+              {% endif %}
+            {% elif show_changelinks %}
+              <td></td>
+            {% endif %}
+
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>{% translate 'You don’t have permission to view or edit anything.' %}</p>
+{% endif %}

@@ -16,6 +16,8 @@ class PaymentConfig(models.Model):
         null=False,
         blank=False
         )
+    
+    admin_icon = "credit-card.svg"
 
     class Meta:
         verbose_name = 'Configuración de pago'
@@ -45,8 +47,8 @@ class PaymentMethod(models.Model):
         )
 
     class Meta:
-        verbose_name = 'Metodo de pago'
-        verbose_name_plural = 'Metodos de pago'
+        verbose_name = 'Método de pago'
+        verbose_name_plural = 'Métodos de pago'
 
     def __str__(self):
         return self.name

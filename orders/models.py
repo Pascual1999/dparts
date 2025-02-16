@@ -1,5 +1,6 @@
 from django.db import IntegrityError, models, transaction
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 
 from product.models import Product
 from payment_config.models import PaymentMethod
@@ -24,12 +25,14 @@ class Order(models.Model):
     PAID = 'PAG'
     CANCELLED = 'CAN'
     COMPLETED = 'COM'
+    DELIVERED = 'DEL'
 
     STATUS_CHOICES = {
         IN_PROGRESS: 'En proceso',  # Orden creada, en espera de pago.
         PAID: 'Pagada',      # Orden pagada, en espera de confirmacion.
         CANCELLED: 'Cancelada',   # Orden cancelada.
-        COMPLETED: 'Completada'   # Orden completada. Pago confirmado.
+        COMPLETED: 'Completada',   # Orden completada. Pago confirmado.
+        DELIVERED: 'Entregada'     # Orden entregada. Productos entregados al cliente.
     }
 
     user = models.ForeignKey(
@@ -60,18 +63,20 @@ class Order(models.Model):
         )
     amount = models.DecimalField(
         verbose_name="Monto (USD)",
-        max_digits=8,
-        decimal_places=2,
-        null=False,
-        blank=False
-        )
-    amount_VEF = models.DecimalField(   
-        verbose_name="Monto (VEF)",
-        max_digits=12,
+        max_digits=10,
         decimal_places=2,
         null=False,
         blank=False,
-        default=0
+        validators=[MinValueValidator(0)]
+        )
+    amount_VEF = models.DecimalField(   
+        verbose_name="Monto (VES)",
+        max_digits=14,
+        decimal_places=2,
+        null=False,
+        blank=False,
+        default=0,
+        validators=[MinValueValidator(0)]
     )
     IVA = models.DecimalField(
         verbose_name="IVA",

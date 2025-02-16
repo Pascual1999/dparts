@@ -4,10 +4,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 
-admin.site.site_header = 'Repuestos Toretto'
-admin.site.site_title = 'Repuestos Toretto'
-admin.site.index_title = 'Repuestos Toretto Administración'
-
 urlpatterns = [
     path('admin/', include('report.urls')),
     path('admin/', admin.site.urls),

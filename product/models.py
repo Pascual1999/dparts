@@ -2,6 +2,7 @@ from io import BytesIO
 from PIL import Image
 
 from django.core.files import File
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.text import slugify
 
@@ -12,7 +13,7 @@ class Category(models.Model):
     """Modelo de categoría de productos."""
     name = models.CharField(
         'Nombre',
-        max_length=255
+        max_length=30
         )
     slug = models.SlugField(
         'URL',
@@ -48,7 +49,7 @@ class Product(models.Model):
         )
     name = models.CharField(
         'Nombre',
-        max_length=255
+        max_length=64
         )
     slug = models.SlugField(
         'URL',
@@ -64,7 +65,7 @@ class Product(models.Model):
         )
     brand = models.CharField(
         'Marca',
-        max_length=64,
+        max_length=32,
         blank=True,
         null=True
     )
@@ -75,11 +76,14 @@ class Product(models.Model):
         )
     price = models.DecimalField(
         'Precio (USD)',
-        max_digits=6,
-        decimal_places=2
+        max_digits=8,
+        decimal_places=2,
+        validators=[
+            MinValueValidator(0.00)
+        ]
         )
     stock = models.PositiveIntegerField(
-        'En stock',
+        'En inventario',
         default=0,
         blank=False,
         null=False
