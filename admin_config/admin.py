@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.conf import settings
-from django.utils.translation import gettext as _
 from django.contrib.auth.models import Permission
 
 from django_apscheduler.models import DjangoJob, DjangoJobExecution
