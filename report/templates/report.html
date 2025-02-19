@@ -47,7 +47,8 @@
             <h2 class="subtitle">{{ currentMonth }} - {{ currentYear }}</h2>
             {% elif filterBy == 'this-year' %}
             <h2 class="subtitle">{{ currentYear }}</h2>
-            
+            {% elif filterBy == 'test' %}
+            <h2 class="subtitle">Enero - {{ currentYear }} - Prueba</h2>
             {% endif %}
             
           </div>
@@ -56,27 +57,27 @@
         <div class="columns"> 
             <div class="column is-3 ">
                 <div class="box has-text-centered">
-                    <p class="is-size-5">Ordenes en proceso</p>
+                    <p class="is-size-5">Órdenes en proceso</p>
                     <p class="is-size-1">{{ total_pending_orders }}</p>
                 </div>
             </div>
     
             <div class="column is-3">
                 <div class="box has-text-centered">
-                    <p class="is-size-5">Ordenes Canceladas</p>
+                    <p class="is-size-5">Órdenes Canceladas</p>
                     <p class="is-size-1">{{ total_cancelled_orders }}</p>
                 </div>
             </div>
             <div class="column is-3">
                 <div class="box has-text-centered">
-                    <p class="is-size-5">Ordenes Pagadas</p>
+                    <p class="is-size-5">Órdenes Pagadas</p>
                     <p class="is-size-1">{{ total_paid_orders }}</p>
 
                 </div>
             </div>
             <div class="column is-3">
                 <div class="box has-text-centered">
-                    <p class="is-size-5">Ordenes Completadas</p>
+                    <p class="is-size-5">Órdenes Completadas</p>
                     <p class="is-size-1">{{ total_completed_orders }}</p>
 
                 </div>
@@ -86,7 +87,7 @@
 
         <div class="column is-6 is-flex is-flex-direction-column">
             <div class="box has-text-centered">
-                <p class="is-size-5">Ordenes Completadas</p>
+                <p class="is-size-5">Órdenes Completadas</p>
                 <div style="height: 40vh;">
                     <canvas id="ordersThroughYear"></canvas>
                 </div>

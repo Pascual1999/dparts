@@ -1,6 +1,6 @@
 from datetime import date
 import json
-
+from random import randrange
 
 from django.db.models import Sum, Count, Max
 from django.db.models.functions import ExtractMonth, ExtractDay, ExtractYear
@@ -38,6 +38,8 @@ def total_completed_orders(request):
             data = Order.objects.filter(
                 status=Order.COMPLETED
             ).count()
+        elif filterBy == 'test':
+            data = randrange(100)
 
         return {'total_completed_orders': data}
 
@@ -66,6 +68,8 @@ def total_pending_orders(request):
             data = Order.objects.filter(
                 status=Order.IN_PROGRESS
             ).count()
+        elif filterBy == 'test':
+            data = randrange(100)
 
         return {'total_pending_orders': data}
 
@@ -94,6 +98,8 @@ def total_cancelled_orders(request):
             data = Order.objects.filter(
                 status=Order.CANCELLED
             ).count()
+        elif filterBy == 'test':
+            data = randrange(100)
         
         return {'total_cancelled_orders': data}
     else:
@@ -122,6 +128,8 @@ def total_paid_orders(request):
             data = Order.objects.filter(
                 status=Order.PAID
             ).count()
+        elif filterBy == 'test':
+            data = randrange(100)
 
         return {'total_paid_orders': data}
     else:
@@ -176,7 +184,16 @@ def top10_products(request):
                         'x': item['product_name'],
                         'y': item['total_quantity']
                     })
+                
+        elif filterBy == 'test':
+            for i in range(10):
+                datalist.append(
+                    {
+                        'x': 'Producto ' + str(i+1),
+                        'y': 100 - i*10
+                    })
         return {'top10_products': json.dumps(datalist)}
+
     else:
         return {'top10_products': 0}
 
@@ -187,7 +204,8 @@ MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
 FILTERS = {
     "this-month": "Este Mes",
     "this-year": "Este Año",
-    "all": "Todos Los Tiempos"
+    "all": "Todos Los Tiempos",
+    "test": "Prueba"
 }
 
 
@@ -254,6 +272,11 @@ def orders_through_year(request,):
                 datadict.update({
                     dataframe[i]['year']: dataframe[i]['count']
                 })
+        elif filterBy == 'test':
+            for i in range(1, 32):
+                if i not in datadict:
+                    datadict.update({i: randrange(20, 100)})
+            datadict = dict(sorted(datadict.items()))
 
         return {'orders_through_year': json.dumps(list(datadict.values())),
                 'labels': json.dumps(list(datadict.keys())),
