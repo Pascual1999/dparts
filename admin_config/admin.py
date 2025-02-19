@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.conf import settings
 from django.contrib.auth.models import Permission
-
+from django.contrib.sites.models import Site
 from django_apscheduler.models import DjangoJob, DjangoJobExecution
 from knox.models import AuthToken
 
@@ -30,3 +30,5 @@ admin.site.site_url = settings.SITE_URL
 admin.site.unregister(DjangoJob)
 admin.site.unregister(DjangoJobExecution)
 admin.site.unregister(AuthToken)
+
+admin.site.unregister(Site)

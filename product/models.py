@@ -1,6 +1,7 @@
 from io import BytesIO
 from PIL import Image
 
+
 from django.core.files import File
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -41,6 +42,7 @@ class Category(models.Model):
 
 class Product(models.Model):
     """Modelo de producto."""
+
     category = models.ForeignKey(
         Category,
         verbose_name='Categoria',
@@ -188,6 +190,7 @@ class Tag(models.Model):
         )
     products = models.ManyToManyField(
         Product,
+        'Productos',
         blank=True,
         through='ProductTag'
     )

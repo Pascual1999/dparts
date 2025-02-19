@@ -35,14 +35,28 @@ class ProductAdmin(ImportExportModelAdmin):
     list_filter = ['is_active', 'category', 'tags']
     list_per_page = 20
     readonly_fields = ['thumbnail', 'slug', 'units_sold']
+    view_on_site = False
 
 
 class TagAdmin(admin.ModelAdmin):
     inlines = [ProductTagInline]
     list_per_page = 20
+    list_display = ['name']
     readonly_fields = ['slug']
+    view_on_site = False
 
 
-admin.site.register(Category)
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_per_page = 20
+    view_on_site = False
+    list_display = ['name', 'productos']
+
+    def productos(self, obj):
+        return obj.products.count()
+
+
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Product, ProductAdmin)
